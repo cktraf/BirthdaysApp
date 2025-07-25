@@ -16,6 +16,7 @@ struct ContentView: View {
     
     @State private var newName = ""
     @State private var newBirthday = Date.now
+    @State private var selectedFriend: Friend?
     
     var body: some View {
         NavigationStack {
@@ -28,10 +29,18 @@ struct ContentView: View {
                             Text(friend.birthday, format: .dateTime.month(.wide).day().year())
                         }// h stack
                     }//h stack
+                    .onTapGesture {
+                        selectedFriend = friend
+                    }
                 }//for each
                     .onDelete(perform: deleteFriend)
                 }//list
                 .navigationTitle("Birthdays")
+                .sheet(item: $selectedFriend) { friend in // new
+                    NavigationStack { // new
+                        EditFriendView(friend: friend) // new
+                    } // new
+                } // new
                 .safeAreaInset(edge: .bottom){
                     VStack(alignment: .center, spacing: 20) {
                         Text("New birthday")
