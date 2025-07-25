@@ -10,6 +10,10 @@ import SwiftUI
 struct ContentView: View {
     @State private var friends = [
         Friend(name: "Juliet", birthday: Date(timeIntervalSince1970: 36)), Friend(name: "Emerson", birthday: Date(timeIntervalSince1970: 37))]
+    
+    @State private var newName = ""
+    @State private var newBirthday = Date.now
+    
     var body: some View {
         NavigationStack {
             List(friends, id: \.name) { friend in
@@ -20,6 +24,26 @@ struct ContentView: View {
                 }//hStack end
             }//list
             .navigationTitle("Birthdays")
+            .safeAreaInset(edge: .bottom){
+                VStack(alignment: .center, spacing: 20) {
+                    Text("New birthday")
+                        .font(.headline)
+                    DatePicker(selection: $newBirthday, in: Date.distantPast...Date.now, displayedComponents: .date) {
+                        TextField("Name", text: $newName)
+                            .textFieldStyle(.roundedBorder)
+                    }//date picker
+                    
+                    Button("Save") {
+                        let newFriend = Friend(name: newName, birthday: newBirthday)
+                        friends.append(newFriend)
+                        newName = ""
+                        newBirthday = .now
+                    }//button
+                    .bold()
+                }//vStack
+                .padding()
+                .background(.bar)
+            }//safe area inset end
         }//nav stack
     }//body
 }//struct
